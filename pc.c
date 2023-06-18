@@ -240,3 +240,403 @@ char PC_Model[][3][3] =
    {0,0,0} },
 
 };
+char curMap[25][30];
+int map_num;
+
+COORD Pos;
+
+COORD PC_mapPosition; // map에서의 pc좌표
+
+BULLETNODE BULLET[NPC_MAX];
+int pc_main(int mapnum) {
+
+	Boss_Pos.X = 28;
+	Boss_Pos.Y = 8;
+
+
+	if (mapnum == 1)
+	{
+		for (int i = 0; i < 21; i++)
+		{
+			for (int j = 0; j < 21; j++)
+			{
+				curMap[i][j] = map[i][j];
+			}
+		}
+		map_num = mapnum;
+		// pc 커서좌표
+		Pos.X = 24;
+		Pos.Y = 13;
+		SetCurrentCursorPos(Pos.X, Pos.Y);
+
+		//pc방향초기화
+		PC_Direction = 0;
+		//pc 출력
+		DrawPlayer(PC_Model[PC_Direction]);
+	}
+	else
+	{
+		for (int i = 0; i < 21; i++)
+		{
+			for (int j = 0; j < 21; j++)
+			{
+				curMap[i][j] = easymap[i][j];
+			}
+		}
+
+		map_num = mapnum;
+		// pc 커서좌표
+		Pos.X = 26;
+		Pos.Y = 14;
+		SetCurrentCursorPos(Pos.X, Pos.Y);
+
+		//pc방향초기화
+		PC_Direction = 0;
+		//pc 출력
+		DrawPlayer(PC_Model[PC_Direction]);
+
+	}
+
+	SetCurrentCursorPos(50, 5);
+	printf("*******************");
+
+
+	SetCurrentCursorPos(50, 16);
+	printf("*******************");
+	SetCurrentCursorPos(50, 17);
+	setColor(10, 0);
+	printf("SCORE : ");
+	setColor(15, 0);
+
+
+
+
+	for (int i = 0; i < SHOT_MAX; i++) //
+		BULLET[i].UseFlag = 0; //
+
+	srand(time(NULL));
+
+	RemoveCursor();
+
+	DrawGun();
+
+	while (1) {
+
+		if (hp <= 0)
+		{
+
+			int tmpscore = score;
+			score = 0;
+			for (int i = 0; i < BOSS_MAX; i++)
+			{
+				if (i < 40)
+				{
+					BULLET[i].UseFlag = 0;
+					NPC[i].UseFlag = 0;
+				}
+				BOSS[i].UseFlag = 0;
+			}
+
+			for (int i = 0; i < 4; i++)
+				ammo[i] = 0;
+
+			PC_GunMode = 1;
+			GUN1TRUE = 1;
+			GUN2TRUE = 0;
+			GUN3TRUE = 0;
+			GUN4TRUE = 0;
+			GUN5TRUE = 0;
+
+			Gun1Time = 10;
+			Gun2Time = 10;
+			Gun3Time = 10;
+			InBoss = 7000;
+
+			hp = 3;
+			Boss_Health = 1000;
+			SetCurrentCursorPos(0, 3);
+			printf("                                                                        ");
+			GameOver(tmpscore);
+		}
+		if (score == InBoss) {
+
+			InBoss--;
+
+			DeleteScreen(30);
+			score++;
+
+			//hp = 3;
+			for (int i = 0; i < 25; i++)
+			{
+				for (int j = 0; j < 30; j++)
+				{
+					curMap[i][j] = bossmap[i][j];
+				}
+			}
+
+			for (int i = 0; i < SHOT_MAX; i++) {
+
+				BULLET[i].UseFlag = 0;
+				NPC[i].UseFlag = 0;
+			}
+
+			system("mode con:cols=110 lines=35");
+			for (int i = 0; i < BOSS_MAX; i++) {
+				BOSS[i].UseFlag = 0; // BOSS
+			}
+
+
+
+			DoProgress("Boss HP ", Boss_Health, 1000);
+			PC_GunMode = 1;
+			DrawGun();
+			DrawMap(bossmap, 30, 25);
+
+		}
+
+		int key;
+		if (_kbhit() != 0) {
+
+			key = _getch();
+			switch (key)
+			{
+			case LEFT:
+				PC_ShiftLeft();
+				break;
+			case RIGHT:
+				PC_ShiftRight();
+				break;
+			case UP:
+				PC_ShiftUp();
+				break;
+			case DOWN:
+				PC_ShiftDown();
+				break;
+			case Q:
+				PC_Shoot(PC_Model[PC_Direction]);
+				//Boss_Health -= 3;
+				break;
+			case GUN1:
+				if (GUN1TRUE == 1)
+				{
+					PC_GunMode = 1;//
+					DrawGun();
+					break;
+				}
+				break;
+			case GUN2:
+				if (GUN2TRUE == 1)
+				{
+					PC_GunMode = 2;//
+					DrawGun();
+					break;
+				}
+				break;
+			case GUN3:
+				if (GUN3TRUE == 1)
+				{
+					PC_GunMode = 3;//
+					DrawGun();
+					break;
+				}
+				break;
+			case GUN4:
+				if (GUN4TRUE == 1)
+				{
+					PC_GunMode = 4;//
+					DrawGun();
+					break;
+				}
+				break;
+			case GUN5:
+				if (GUN5TRUE == 1)
+				{
+					PC_GunMode = 5;//
+					DrawGun();
+
+					break;
+				}
+				break;
+
+			}
+
+		}
+		if (count == moojend)
+		{
+			mooj = 0;
+			moojend = 0;
+		}
+		Sleep(10);  ///
+		ShotAction(count);
+		if (score != StageClear) {
+
+			PC_GetItem();
+			NpcAction(count);
+
+			if (speed < 150)
+				speed = score / 50;
+
+			if (count % (200 - speed) == 0)
+			{
+				if (mapnum == 1)
+				{
+					if (score >= 1000)
+					{
+						CreateNpc(1, 1);
+						CreateNpc(17, 1);
+					}
+					if (score >= 2000)
+					{
+						CreateNpc(1, 19);
+						CreateNpc(17, 19);
+					}
+					CreateNpc(1, 9);
+					CreateNpc(17, 9);
+				}
+				else if (mapnum == 2)
+				{
+					if (score >= 1000)
+					{
+						CreateNpc(1, 1);
+						CreateNpc(19, 1);
+					}
+					if (score >= 2000)
+					{
+						CreateNpc(1, 19);
+						CreateNpc(19, 19);
+					}
+					CreateNpc(1, 10);
+					CreateNpc(19, 10);
+				}
+			}
+		}
+
+
+		else {
+
+			if (Boss_Health <= 0) {
+				score--;
+				Boss_Health = 1000;
+				DeleteScreen(35);
+
+				SetCurrentCursorPos(0, 2);
+				printf("                                             ");
+				SetCurrentCursorPos(0, 3);
+				printf("                                             ");
+
+				DrawGun();
+				//DrawMap(bossmap, 30, 25);
+				if (mapnum == 1)
+				{
+					for (int i = 0; i < 25; i++)
+					{
+						for (int j = 0; j < 30; j++)
+						{
+							curMap[i][j] = map[i][j];
+						}
+					}
+					map_num = mapnum;
+					// pc 커서좌표
+					Pos.X = 24;
+					Pos.Y = 13;
+					SetCurrentCursorPos(Pos.X, Pos.Y);
+
+					//pc방향초기화
+					PC_Direction = 0;
+					//pc 출력
+					DrawPlayer(PC_Model[PC_Direction]);
+				}
+				else
+				{
+					for (int i = 0; i < 25; i++)
+					{
+						for (int j = 0; j < 30; j++)
+						{
+							curMap[i][j] = easymap[i][j];
+						}
+					}
+
+					map_num = mapnum;
+					// pc 커서좌표
+					Pos.X = 26;
+					Pos.Y = 14;
+					SetCurrentCursorPos(Pos.X, Pos.Y);
+
+					//pc방향초기화
+					PC_Direction = 0;
+					//pc 출력
+					DrawPlayer(PC_Model[PC_Direction]);
+
+				}
+
+				SetCurrentCursorPos(50, 5);
+				printf("*******************");
+
+
+				SetCurrentCursorPos(50, 16);
+				printf("*******************");
+				SetCurrentCursorPos(50, 17);
+				setColor(10, 0);
+				printf("SCORE : ");
+				setColor(15, 0);
+
+			}
+			Sleep(10);
+			if (count % 40 == 0)
+			{
+				Boss_Shoot();
+			}
+			if (count % 20 == 0) {
+				if (Boss_Direction == 0)
+					Boss_ShiftRight();
+				else
+					Boss_ShiftLeft();
+			}
+			if (count % 3 == 0)
+				Boss_ShotAction();
+		}
+
+
+		Draw();
+
+
+		if (count > 201)
+			count = 0; //
+		count++;//
+		Gun1Time++;//
+		Gun2Time++;//
+		Gun3Time++;//
+
+		int tmp;
+		if (score != StageClear)
+			tmp = 50;
+		else
+			tmp = 75;
+
+		SetCurrentCursorPos(tmp, 7);
+		printf("                       ");
+		switch (PC_GunMode)
+		{
+		case 1:
+			SetCurrentCursorPos(tmp, 7);
+			printf("PISTOL / ∞");
+			break;
+		case 2:
+			SetCurrentCursorPos(tmp, 7);
+			printf("SNIPER / %d", ammo[0]);
+			break;
+		case 3:
+			SetCurrentCursorPos(tmp, 7);
+			printf("ASSAULT RIFLE / %d", ammo[1]);
+			break;
+		case 4:
+			SetCurrentCursorPos(tmp, 7);
+			printf("MINES / %d", ammo[2]);
+			break;
+		case 5:
+			SetCurrentCursorPos(tmp, 7);
+			printf("HEALPACK / %d", ammo[3]);
+			break;
+		}
+	}
+}
