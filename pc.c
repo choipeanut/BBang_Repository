@@ -715,3 +715,127 @@ void PC_ShiftDown() {
 	PC_Direction = 2;
 
 }
+void PC_DeleteBlock(char blockInfo[3][3]) {
+
+	int x, y;
+	COORD curPos = Pos;
+
+	for (y = 0; y < 3; y++) {
+		for (x = 0; x < 3; x++) {
+
+			SetCurrentCursorPos(curPos.X + x * 2, curPos.Y + y);
+
+			if (blockInfo[y][x] == 2 || blockInfo[y][x] == 6) {
+				printf("  ");
+			}
+		}
+	}
+	SetCurrentCursorPos(curPos.X, curPos.Y);
+
+
+}
+void DrawPlayer(char blockInfo[3][3]) {
+
+	int x, y;
+
+	COORD curPos = Pos;
+
+
+	for (y = 0; y < 3; y++) {
+
+		for (x = 0; x < 3; x++) {
+			SetCurrentCursorPos(curPos.X + (x * 2), curPos.Y + y);
+			PC_mapPosition.X = (Pos.X - GBOARD_ORIGIN_X) / 2;
+			PC_mapPosition.Y = Pos.Y - GBOARD_ORIGIN_Y;
+
+			if (blockInfo[y][x] == 2) {
+				curMap[PC_mapPosition.Y + y][PC_mapPosition.X + x] = 2;
+
+				printf("■");
+			}
+			if (blockInfo[y][x] == 6 && curMap[PC_mapPosition.Y + y][PC_mapPosition.X + x] != 1) {
+
+				//
+				if (PC_GunMode == 1) {
+					setColor(6, 0);
+					if (PC_Direction == 0)
+						printf("┗ ");
+					else if (PC_Direction == 1)
+						printf("┏ ");
+					else if (PC_Direction == 2)
+						printf("┏ ");
+					else
+						printf("┒ ");
+					setColor(15, 0);
+				}
+
+				else if (PC_GunMode == 2) {
+
+					setColor(10, 0);
+					if (PC_Direction == 0)
+						printf("∧");
+					else if (PC_Direction == 1)
+						printf("＞");
+					else if (PC_Direction == 2)
+						printf("∨");
+					else
+						printf("＜");
+					setColor(15, 0);
+				}
+				else if (PC_GunMode == 3) {
+					setColor(13, 0);
+					if (PC_Direction == 0)
+						printf("ㅐ");
+					else if (PC_Direction == 1)
+						printf("〓");
+					else if (PC_Direction == 2)
+						printf("ㅐ");
+					else
+						printf("〓");
+					setColor(15, 0);
+				}
+				else if (PC_GunMode == 4) {
+					setColor(4, 0);
+					printf("♨");
+					setColor(15, 0);
+				}
+				else {
+					setColor(8, 0);
+					printf("▣");
+					setColor(15, 0);
+
+				}
+			}
+		}
+	}
+
+	SetCurrentCursorPos(curPos.X, curPos.Y);
+
+}
+void Draw() {
+	//모든 출력함수 호출
+	DrawPlayer(PC_Model[PC_Direction]);
+	if (score != StageClear)
+		DrawNPC();
+
+	DrawUI();
+
+	DrawShot();
+
+
+	if (score == StageClear) {
+
+		DrawPlayer(PC_Model[PC_Direction]);
+		Boss_DrawShot();
+		DrawBoss(Boss_Model);
+		DoProgress("Boss HP ", Boss_Health, 1000);
+
+		return;
+	}
+
+	if (map_num == 1)
+		DrawMap(curMap, 19, 21);
+	else  if (map_num == 2) {
+		DrawMap(curMap, 21, 21);
+	}
+}
