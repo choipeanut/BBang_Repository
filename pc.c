@@ -640,3 +640,78 @@ int pc_main(int mapnum) {
 		}
 	}
 }
+void PC_ShiftRight() {
+
+
+	if (DetectPC_Collision(Pos.X + 2, Pos.Y) == 0)
+		return;
+
+
+	PC_DeleteBlock(PC_Model[PC_Direction]);
+
+	PC_mapPosition.X = (Pos.X - GBOARD_ORIGIN_X) / 2;
+	PC_mapPosition.Y = Pos.Y - GBOARD_ORIGIN_Y;
+	curMap[PC_mapPosition.Y + 1][PC_mapPosition.X + 1] = 0;
+
+	Pos.X += 2;
+	PC_mapPosition.X = (Pos.X - GBOARD_ORIGIN_X) / 2;
+	curMap[PC_mapPosition.Y + 1][PC_mapPosition.X + 1] = 2;
+
+	PC_Direction = 1;
+
+}
+void PC_ShiftLeft() {//나머지 방향도 작동방식 동일
+	if (DetectPC_Collision(Pos.X - 2, Pos.Y) == 0)
+		return;
+
+
+	PC_DeleteBlock(PC_Model[PC_Direction]);
+	//이전위치 삭제
+	PC_mapPosition.X = (Pos.X - GBOARD_ORIGIN_X) / 2;
+	PC_mapPosition.Y = Pos.Y - GBOARD_ORIGIN_Y;
+	curMap[PC_mapPosition.Y + 1][PC_mapPosition.X + 1] = 0;
+	//위치 업데이트
+	Pos.X += -2;
+	PC_mapPosition.X = (Pos.X - GBOARD_ORIGIN_X) / 2;
+	curMap[PC_mapPosition.Y + 1][PC_mapPosition.X + 1] = 2;
+	//pc방향 업데이트
+	PC_Direction = 3;
+
+
+}
+void PC_ShiftUp() {
+	if (DetectPC_Collision(Pos.X, Pos.Y - 1) == 0)
+		return;
+
+
+	PC_DeleteBlock(PC_Model[PC_Direction]);
+
+	PC_mapPosition.X = (Pos.X - GBOARD_ORIGIN_X) / 2;
+	PC_mapPosition.Y = Pos.Y - GBOARD_ORIGIN_Y;
+	curMap[PC_mapPosition.Y + 1][PC_mapPosition.X + 1] = 0;
+
+	Pos.Y += -1;
+	PC_mapPosition.Y = Pos.Y - GBOARD_ORIGIN_Y;
+	curMap[PC_mapPosition.Y + 1][PC_mapPosition.X + 1] = 2;
+
+	PC_Direction = 0;
+
+}
+void PC_ShiftDown() {
+	if (DetectPC_Collision(Pos.X, Pos.Y + 1) == 0)
+		return;
+
+
+	PC_DeleteBlock(PC_Model[PC_Direction]);
+
+	PC_mapPosition.X = (Pos.X - GBOARD_ORIGIN_X) / 2;
+	PC_mapPosition.Y = Pos.Y - GBOARD_ORIGIN_Y;
+	curMap[PC_mapPosition.Y + 1][PC_mapPosition.X + 1] = 0;
+
+	Pos.Y += 1;
+	PC_mapPosition.Y = Pos.Y - GBOARD_ORIGIN_Y;
+	curMap[PC_mapPosition.Y + 1][PC_mapPosition.X + 1] = 2;
+
+	PC_Direction = 2;
+
+}
