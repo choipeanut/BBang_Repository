@@ -240,6 +240,7 @@ char PC_Model[][3][3] =
    {0,0,0} },
 
 };
+
 char curMap[25][30];
 int map_num;
 
@@ -480,12 +481,12 @@ int pc_main(int mapnum) {
 			{
 				if (mapnum == 1)
 				{
-					if (score >= 1000)
+					if (score >= 100)
 					{
 						CreateNpc(1, 1);
 						CreateNpc(17, 1);
 					}
-					if (score >= 2000)
+					if (score >= 200)
 					{
 						CreateNpc(1, 19);
 						CreateNpc(17, 19);
@@ -495,12 +496,12 @@ int pc_main(int mapnum) {
 				}
 				else if (mapnum == 2)
 				{
-					if (score >= 1000)
+					if (score >= 100)
 					{
 						CreateNpc(1, 1);
 						CreateNpc(19, 1);
 					}
-					if (score >= 2000)
+					if (score >= 200)
 					{
 						CreateNpc(1, 19);
 						CreateNpc(19, 19);
@@ -640,6 +641,8 @@ int pc_main(int mapnum) {
 		}
 	}
 }
+
+
 void PC_ShiftRight() {
 
 
@@ -839,7 +842,12 @@ void Draw() {
 		DrawMap(curMap, 21, 21);
 	}
 
+
+
+
 }
+
+
 int DetectPC_Collision(int posX, int posY) {
 	int i, y;
 	//진행방향 한칸 앞을 받아옴

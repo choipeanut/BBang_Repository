@@ -350,7 +350,7 @@ void Information()
 	SetCurrentCursorPos(14, 4);
 	printf("↑ - 위 이동        SPACE - 공격!");
 	SetCurrentCursorPos(14, 6);
-	printf("↓ - 아래 이동      1~5 - 무기변경!");
+	printf("↓ - 아래 이동      1 ~ 5 - 무기변경!");
 	SetCurrentCursorPos(14, 8);
 	printf("→ - 오른쪽 이동");
 	SetCurrentCursorPos(14, 10);
