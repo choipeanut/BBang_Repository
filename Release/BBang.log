@@ -1,0 +1,24 @@
+﻿  main.c
+c:\users\82104\desktop\bbang\main.c(421): warning C4013: 'pc_main'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
+  pc.c
+c:\users\82104\desktop\bbang\pc.c(308): warning C4013: 'setColor'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
+c:\users\82104\desktop\bbang\pc.c(318): warning C4244: '함수': 'time_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\82104\desktop\bbang\pc.c(360): warning C4013: 'GameOver'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
+c:\users\82104\desktop\bbang\pc.c(366): warning C4013: 'DeleteScreen'이(가) 정의되지 않았습니다. extern은 int형을 반환하는 것으로 간주합니다.
+c:\users\82104\desktop\bbang\pc.c(852): warning C4101: 'y' :참조되지 않은 지역 변수입니다.
+c:\users\82104\desktop\bbang\pc.c(852): warning C4101: 'i' :참조되지 않은 지역 변수입니다.
+c:\users\82104\desktop\bbang\pc.c(1429): warning C4101: 'n' :참조되지 않은 지역 변수입니다.
+c:\users\82104\desktop\bbang\pc.c(1551): warning C4098: 'NpcUpdate': 'void' 함수에서 값을 반환하고 있습니다.
+c:\users\82104\desktop\bbang\pc.c(1557): warning C4098: 'NpcUpdate': 'void' 함수에서 값을 반환하고 있습니다.
+c:\users\82104\desktop\bbang\pc.c(1563): warning C4098: 'NpcUpdate': 'void' 함수에서 값을 반환하고 있습니다.
+c:\users\82104\desktop\bbang\pc.c(1569): warning C4098: 'NpcUpdate': 'void' 함수에서 값을 반환하고 있습니다.
+c:\users\82104\desktop\bbang\pc.c(2056): warning C4553: '==': 식의 결과가 사용되지 않습니다. '='을(를) 의도했습니까?
+c:\users\82104\desktop\bbang\pc.c(2058): warning C4553: '==': 식의 결과가 사용되지 않습니다. '='을(를) 의도했습니까?
+c:\users\82104\desktop\bbang\pc.c(2060): warning C4553: '==': 식의 결과가 사용되지 않습니다. '='을(를) 의도했습니까?
+c:\users\82104\desktop\bbang\pc.c(2062): warning C4553: '==': 식의 결과가 사용되지 않습니다. '='을(를) 의도했습니까?
+c:\users\82104\desktop\bbang\pc.c(2064): warning C4553: '==': 식의 결과가 사용되지 않습니다. '='을(를) 의도했습니까?
+c:\users\82104\desktop\bbang\pc.c(2066): warning C4553: '==': 식의 결과가 사용되지 않습니다. '='을(를) 의도했습니까?
+  코드를 생성하고 있습니다.
+  All 61 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  코드를 생성했습니다.
+  BBang.vcxproj -> C:\Users\82104\Desktop\BBang\Release\BBang.exe
