@@ -838,4 +838,269 @@ void Draw() {
 	else  if (map_num == 2) {
 		DrawMap(curMap, 21, 21);
 	}
+
+}
+int DetectPC_Collision(int posX, int posY) {
+	int i, y;
+	//진행방향 한칸 앞을 받아옴
+	PC_mapPosition.X = (posX - GBOARD_ORIGIN_X) / 2;
+	PC_mapPosition.Y = posY - GBOARD_ORIGIN_Y;
+
+	if (curMap[PC_mapPosition.Y + 1][PC_mapPosition.X + 1] == 1)
+		return 0;
+	//_________________________________________________________________________--
+	else if (curMap[PC_mapPosition.Y + 1][PC_mapPosition.X + 1] == 6) {
+		if (mooj == 0)
+		{
+			hp--;
+			mooj = 1;
+			moojend = (count + 60) % 200;
+		}
+		return 0;
+	}
+
+
+	if (curMap[PC_mapPosition.Y + 1][PC_mapPosition.X + 1] >= 50 && curMap[PC_mapPosition.Y + 1][PC_mapPosition.X + 1] <= 53)
+	{
+		if (curMap[PC_mapPosition.Y + 1][PC_mapPosition.X + 1] == 50)
+		{
+			GUN2TRUE = 1;
+			ammo[0] += 10;
+		}
+		else if (curMap[PC_mapPosition.Y + 1][PC_mapPosition.X + 1] == 51)
+		{
+			GUN3TRUE = 1;
+			ammo[1] += 40;
+		}
+		else if (curMap[PC_mapPosition.Y + 1][PC_mapPosition.X + 1] == 52)
+		{
+			GUN4TRUE = 1;
+			ammo[2] += 5;
+		}
+		else if (curMap[PC_mapPosition.Y + 1][PC_mapPosition.X + 1] == 53)
+		{
+			GUN5TRUE = 1;
+			ammo[3] += 1;
+		}
+		curMap[PC_mapPosition.Y + 1][PC_mapPosition.X + 1] = 0;
+		//printf("tlqkfqtlqtkmdslkfnsdlfbwe");
+	}
+
+
+	return 1;
+
+}
+
+
+void Collision_mapset(int i, int elem) {
+	PC_mapPosition.X = (BULLET[i].x - GBOARD_ORIGIN_X) / 2;
+	PC_mapPosition.Y = BULLET[i].y - GBOARD_ORIGIN_Y;
+	curMap[PC_mapPosition.Y][PC_mapPosition.X] = elem;
+	//map[PC_mapPosition.Y][PC_mapPosition.X] = elem;
+}
+
+void ShotAction(int count) {
+
+	int i;
+	for (i = 0; i < SHOT_MAX; i++) {
+
+		if (BULLET[i].UseFlag == 1) {
+
+			if (BULLET[i].Type == 1) {
+				if (count % 3 == 0)
+					ShootUpdate(i);
+			}
+			else if (BULLET[i].Type == 2) {
+
+				ShootUpdate(i);
+			}
+			else if (BULLET[i].Type == 3) {
+				if (count % 2 == 0)
+					ShootUpdate(i);
+			}
+			else if (BULLET[i].Type == 4) {
+				//
+				mine(i);
+			}
+
+
+
+
+		}
+	}
+}
+
+void ShootUpdate(int i) {
+
+	SetCurrentCursorPos(BULLET[i].x, BULLET[i].y);
+	printf("  ");
+
+	if (BULLET[i].BulletDirect == 0) {
+
+		if (DetectBullet_Collision(BULLET[i].x, BULLET[i].y - 1, BULLET[i].Type) == 0) {
+			BULLET[i].UseFlag = 0;
+			return;
+		}
+
+
+		BULLET[i].y--;
+
+	}
+	else if (BULLET[i].BulletDirect == 1) {
+
+
+		if (DetectBullet_Collision(BULLET[i].x + 2, BULLET[i].y, BULLET[i].Type) == 0) {
+			BULLET[i].UseFlag = 0;
+			return;
+		}
+
+		BULLET[i].x += 2;
+
+	}
+	else if (BULLET[i].BulletDirect == 2) {
+
+		if (DetectBullet_Collision(BULLET[i].x, BULLET[i].y + 1, BULLET[i].Type) == 0) {
+			BULLET[i].UseFlag = 0;
+			return;
+		}
+
+		BULLET[i].y++;
+
+	}
+	else {
+
+		if (DetectBullet_Collision(BULLET[i].x - 2, BULLET[i].y, BULLET[i].Type) == 0) {
+			BULLET[i].UseFlag = 0;
+			return;
+		}
+
+		BULLET[i].x -= 2;
+
+	}
+}
+void DrawShot() {
+
+	int i;
+
+	for (i = 0; i < SHOT_MAX; i++) {
+
+		int x = BULLET[i].x;
+		int y = BULLET[i].y;
+		if (BULLET[i].UseFlag == 1) {
+
+			SetCurrentCursorPos(x, y);
+
+			if (BULLET[i].Type == 1)
+				Gun1Print(i);
+			else if (BULLET[i].Type == 2)
+				Gun2Print(i);
+			else if (BULLET[i].Type == 3)
+				Gun3Print(i);
+			else if (BULLET[i].Type == 4)
+				Gun4Print(i);
+		}
+		SetCurrentCursorPos(Pos.X, Pos.Y);
+	}
+}
+void PC_Shoot(char blockInfo[3][3]) {
+	int x, y;
+
+	COORD Bullet;
+	COORD Bullet2;
+
+	for (y = 0; y < 3; y++) {
+		for (x = 0; x < 3; x++) {
+			if (blockInfo[y][x] == 2) {
+				Bullet.X = Pos.X + (x * 2);
+				Bullet.Y = Pos.Y + y;
+			}
+			if (blockInfo[y][x] == 6) {
+				Bullet2.X = Pos.X + (x * 2);
+				Bullet2.Y = Pos.Y + y;
+			}
+		}
+	}
+
+	if (PC_GunMode == 1) {
+		if (Gun1Time >= 10) {
+			CreateBullet(Bullet);
+			Gun1Time = 0;
+		}
+	}
+	else if (PC_GunMode == 2) {
+		if (Gun2Time >= 10) {
+			CreateBullet(Bullet);
+			Gun2Time = 0;
+		}
+	}
+
+	else if (PC_GunMode == 3) {
+		if (Gun3Time >= 3) {
+			CreateBullet(Bullet);
+			Gun3Time = 0;
+		}
+	}
+	else if (PC_GunMode == 4)
+		CreateBullet(Bullet2);
+
+	else {
+		if (ammo[3] > 0) {
+			if (hp < 5)
+				hp++;
+
+			ammo[3]--;
+		}
+	}
+
+
+	SetCurrentCursorPos(Pos.X, Pos.Y);
+
+}
+void CreateBullet(COORD Bullet) {
+
+	int i;
+	for (i = 0; i < SHOT_MAX; i++) {
+
+		if (BULLET[i].UseFlag == 0 && curMap[Bullet.Y - GBOARD_ORIGIN_Y][(Bullet.X - GBOARD_ORIGIN_X) / 2] != 1) {
+
+			BULLET[i].UseFlag = 1;
+			BULLET[i].Type = PC_GunMode;
+			if (PC_GunMode != 1)
+				ammo[PC_GunMode - 2]--;
+			BULLET[i].x = Bullet.X;
+			BULLET[i].y = Bullet.Y;
+			BULLET[i].BulletDirect = PC_Direction;
+
+			if (ammo[PC_GunMode - 2] == 0)
+			{
+				if (PC_GunMode == 2)
+				{
+					GUN2TRUE = 0;
+					PC_GunMode = 1;
+					DrawGun();
+
+				}
+				else if (PC_GunMode == 3)
+				{
+					GUN3TRUE = 0;
+					PC_GunMode = 1;
+					DrawGun();
+				}
+				else if (PC_GunMode == 4)
+				{
+					GUN4TRUE = 0;
+					PC_GunMode = 1;
+					DrawGun();
+				}
+				else if (PC_GunMode == 5)
+				{
+					GUN5TRUE = 0;
+					PC_GunMode = 1;
+					DrawGun();
+				}
+			}
+			return;
+
+		}
+	}
 }
